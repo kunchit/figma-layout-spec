@@ -70,6 +70,15 @@ Notes: children order = Figma order; AL = {H|V|none}; gap/pad in AL map only.
 |-------|------------------------|------------|
 | | | guess / confirmed |
 
+## Assets (icons / images)
+
+Exported asset URLs expire ~7 days — committed code must use downloaded bytes
+or a real data source. Never hand-authored SVG.
+
+| Section | Asset | Box (w×h) | Plan | Crop note |
+|---------|-------|-----------|------|-----------|
+| | | | commit file / project icon / dynamic src | overflow+offset if cropped |
+
 ## Out of scope
 
 -

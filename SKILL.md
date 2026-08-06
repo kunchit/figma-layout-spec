@@ -40,6 +40,8 @@ fidelity comes from Auto Layout facts, not from drawing prettier boxes.
 4. **MCP React+Tailwind output = layout IR only.** Adapt to the project’s real
    stack (components, CSS approach, tokens). Never paste IR as final code.
 5. **One section per implement turn** after approval.
+6. **Never hand-author an icon or image.** No invented `<svg>`/`<path>`, no
+   placeholder, no dropped icon. Use the exported asset (see Phase C assets).
 
 ## Pipeline
 
@@ -89,6 +91,9 @@ SPEC must include:
   to the no-AL container** (subtract container origin) plus paint order — the
   implement turn must not re-measure.
 - **Asset Crop Check**: For non-Auto Layout / image frames, inspect `get_design_context` CSS in Phase B to catch `overflow: hidden` wrappers and inner image negative offsets (`top: -XX%`, `height: YY%`) so SPEC coordinates account for cropped assets.
+- **Assets table**: icons/images per section with their box size and a plan
+  (commit the exported file / reuse a project icon whose glyph matches / wire to
+  a real data source). Exported asset URLs expire ~7 days.
 
 **Completion:** SPEC path printed (include that ASCII wires are in SPEC). **Stop and wait for approval.**
 
@@ -96,11 +101,19 @@ SPEC must include:
 
 For **one** approved section per turn:
 
-1. `get_design_context` on that section’s `nodeId` (not the whole page).
+1. `get_design_context` on that section’s `nodeId` (not the whole page). This is
+   the primary call — `get_metadata` / `get_screenshot` orient and validate, they
+   never substitute for it.
 2. `get_screenshot` for visual reference.
 3. Optional: `get_variable_defs`, `get_code_connect_map` when tokens/components matter.
 4. If truncated → `get_metadata` on section → fetch children one by one.
-5. **Layout pass only first:** map Auto Layout → project layout primitives.
+5. **Honor response hints by priority** — earlier overrides later:
+   1. Code Connect snippet → use that codebase component directly.
+   2. Component documentation link → follow it.
+   3. Design annotation → follow the designer note.
+   4. Design token / CSS variable → map to the project's token system.
+   5. Raw hex / absolute position → weakest; lean on the screenshot for intent.
+6. **Layout pass only first:** map Auto Layout → project layout primitives.
    Use the section ASCII wire only to verify **child order / nesting**; use the
    AL → CSS map for gap/padding/align/sizing. Never invent layout from the wire
    alone.
@@ -113,7 +126,7 @@ For **one** approved section per turn:
    | primary/counter align | `justify-content` / `align-items` |
    | Hug / Fill / Fixed | fit-content / `flex: 1` / fixed size |
 
-6. **No-AL (absolute) subtrees** — when a section has no Auto Layout:
+7. **No-AL (absolute) subtrees** — when a section has no Auto Layout:
    - Container: `position: relative`, fixed Figma w/h. Do not fluid-scale it.
    - Children: `position: absolute`, Figma `x/y` → `left/top` offsets from the
      **absolute map** in the SPEC (already relative to the container).
@@ -126,10 +139,27 @@ For **one** approved section per turn:
      (podiums, badges, decorations). Ask before restructuring a no-AL subtree.
    - Responsive caveat: absolute subtrees do not reflow. Keep container fixed
      size, or scale the whole container — flag the choice in the SPEC.
-7. Reuse existing project components when role matches; keep **outer tree** =
-   Figma tree. Library defaults must not replace the skeleton.
-8. Stop when structure + spacing + alignment look right vs screenshot.
-   Defer polish (Phase E) unless user asked in the same turn.
+8. **Reuse before writing.** Search the project for an existing component,
+   layout pattern, or token that matches the design intent, and use it instead
+   of generating an equivalent. Keep the **outer tree** = Figma tree; library
+   defaults must not replace the skeleton.
+9. **Assets — icons and images.** `get_design_context` returns them as `<img>`
+   with a remote asset `src`. Rules:
+   - Render every icon/image from its **exported asset**. Never hand-write
+     `<svg>`/`<path>`, never author an icon file, never leave a placeholder —
+     you do not have the vector data, so anything you draw is wrong.
+   - The asset URL works as `src` immediately but **expires in ~7 days**. For
+     committed code: download and commit the exact asset bytes, or wire dynamic
+     content images to the project's real data source (API / CDN / props).
+   - Reuse a project icon component only when the **glyph** clearly matches — a
+     name match is not enough.
+   - Size explicitly: fixed-size container with **both** width and height
+     (icons usually square, e.g. `24×24`, `overflow: hidden`), leaf `<img>`
+     fills it (`100%` or fixed px). Never `auto` — it renders at intrinsic size.
+   - Cropped frames: honor the SPEC's asset crop notes (wrapper `overflow:
+     hidden` + inner negative offset), do not re-derive them here.
+10. Stop when structure + spacing + alignment look right vs screenshot.
+    Defer polish (Phase E) unless user asked in the same turn.
 
 **Completion:** section done + what remains. Ask before next section.
 
@@ -150,6 +180,17 @@ Polish is **not** beautifying: no new styles, no taste, no “improvements”.
   when no token exists — note the gap, do not invent tokens.
 - Structure is frozen: polish touches styles and assets, never the tree.
 - Verify vs `get_screenshot`; CDP-measure if user wants numbers.
+
+## Error recovery
+
+- On any Figma MCP error: **stop and read the message** before retrying. Do not
+  retry the identical call blind.
+- URL has no `node-id` (file-only URL) → ask the user for a node-specific URL.
+  Never guess a nodeId, never pass an empty one.
+- Timeout → retry against a smaller node (a child from the section table).
+- Truncated → `get_metadata` on the node, then fetch children one by one.
+- **Never** silently fall back to hand-writing a section from the screenshot
+  alone while `get_design_context` can still return context.
 
 ## Anti-prompts (never invent these goals)
 
@@ -179,6 +220,10 @@ Call Figma MCP tools by these names (server wrapper may differ by host):
 - `get_screenshot`
 - `get_variable_defs`
 - `get_code_connect_map`
+
+When the host's `get_design_context` accepts a `skillNames` parameter, pass
+`figma-layout-spec` (prefix `resource:` if this skill was loaded as an MCP
+resource). It is logging only and does not change behavior.
 
 If the host exposes Desktop selection MCP without URL, still record the resolved
 `nodeId` in the SPEC so other agents can resume from the same file.

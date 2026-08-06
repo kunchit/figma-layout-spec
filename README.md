@@ -23,7 +23,9 @@ computed layout after it lands).
    for approval.**
 3. **Phase C — Implement.** One approved section per turn. Layout pass only
    (structure / order / gap / padding / alignment / sizing). No absolute
-   positioning unless the node has no Auto Layout.
+   positioning unless the node has no Auto Layout. Honors the Figma hint
+   priority ladder (Code Connect → docs → annotations → tokens → raw hex) and
+   the asset rules (exported assets only, never hand-authored SVG).
 4. **Phase D — Optional measure.** Hand off to a browser CDP
    `getComputedStyle` loop if proof is wanted.
 
