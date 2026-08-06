@@ -85,6 +85,9 @@ SPEC must include:
 - Reuse guesses (design-system / local components) — mark guesses as guesses
 - Out of scope (pixel type, animations unless asked)
 - Implement order (dependencies first)
+- **Absolute map**: for no-AL sections, record each child's `x/y/w/h` **relative
+  to the no-AL container** (subtract container origin) plus paint order — the
+  implement turn must not re-measure.
 - **Asset Crop Check**: For non-Auto Layout / image frames, inspect `get_design_context` CSS in Phase B to catch `overflow: hidden` wrappers and inner image negative offsets (`top: -XX%`, `height: YY%`) so SPEC coordinates account for cropped assets.
 
 **Completion:** SPEC path printed (include that ASCII wires are in SPEC). **Stop and wait for approval.**
@@ -110,11 +113,23 @@ For **one** approved section per turn:
    | primary/counter align | `justify-content` / `align-items` |
    | Hug / Fill / Fixed | fit-content / `flex: 1` / fixed size |
 
-6. Do **not** use absolute positioning unless that node has no Auto Layout.
+6. **No-AL (absolute) subtrees** — when a section has no Auto Layout:
+   - Container: `position: relative`, fixed Figma w/h. Do not fluid-scale it.
+   - Children: `position: absolute`, Figma `x/y` → `left/top` offsets from the
+     **absolute map** in the SPEC (already relative to the container).
+   - Alternative: single-cell grid overlay (all children `grid-area: 1/1` +
+     margin offsets) — matches MCP IR. Pick one convention per project, record
+     it in the SPEC.
+   - Paint order = Figma child order (later children on top). Add `z-index`
+     only when DOM order must differ.
+   - Do not "fix" overlaps by converting to flex — overlap is often intentional
+     (podiums, badges, decorations). Ask before restructuring a no-AL subtree.
+   - Responsive caveat: absolute subtrees do not reflow. Keep container fixed
+     size, or scale the whole container — flag the choice in the SPEC.
 7. Reuse existing project components when role matches; keep **outer tree** =
    Figma tree. Library defaults must not replace the skeleton.
 8. Stop when structure + spacing + alignment look right vs screenshot.
-   Defer color/type polish unless user asked in the same turn.
+   Defer polish (Phase E) unless user asked in the same turn.
 
 **Completion:** section done + what remains. Ask before next section.
 
@@ -124,6 +139,18 @@ If user wants proof: use a browser CDP loop
 (`getBoundingClientRect` / `getComputedStyle` for gap/padding/size). Do not claim
 “measured” without real computed numbers.
 
+### Phase E — Optional polish (on request only)
+
+Polish = applying **Figma's own** visual props faithfully — color, type
+(family/size/weight/line-height), radius, border, shadow, icon/art assets.
+Polish is **not** beautifying: no new styles, no taste, no “improvements”.
+
+- Run only after layout is accepted; one section or whole page per request.
+- Token-first: map Figma values to project tokens/classes. Hex/px literal only
+  when no token exists — note the gap, do not invent tokens.
+- Structure is frozen: polish touches styles and assets, never the tree.
+- Verify vs `get_screenshot`; CDP-measure if user wants numbers.
+
 ## Anti-prompts (never invent these goals)
 
 Do not optimize for: “make it beautiful”, “polish”, “improve UX”, “modernize”,
@@ -131,7 +158,9 @@ Do not optimize for: “make it beautiful”, “polish”, “improve UX”, �
 whole screen”.
 
 If the user says those during Phase C, **refuse the rewrite** and offer a
-diff-scoped layout fix instead.
+diff-scoped layout fix instead. (A user-requested **Phase E polish pass** —
+Figma's own visual props, no improvisation — is fine; the ban is on inventing
+taste.)
 
 ## When NOT to use this skill
 
