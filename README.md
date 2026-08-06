@@ -1,5 +1,7 @@
 # figma-layout-spec
 
+[![skills.sh](https://skills.sh/b/kunchit/figma-layout-spec)](https://skills.sh/kunchit/figma-layout-spec)
+
 Decompose a Figma page/frame into sections, write a layout-first SPEC, wait for
 approval, then implement one section at a time.
 
@@ -31,7 +33,14 @@ output is layout IR only.
 
 ## Install
 
-Clone and link into your agent skills folders:
+Via [skills.sh](https://skills.sh/kunchit/figma-layout-spec) (works with
+Cursor, Claude Code, Codex, and more):
+
+```bash
+npx skills add kunchit/figma-layout-spec
+```
+
+Or manually — clone and link into your agent skills folders:
 
 ```bash
 git clone https://github.com/kunchit/figma-layout-spec.git ~/dev/figma-layout-spec
