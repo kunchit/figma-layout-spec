@@ -8,8 +8,8 @@ with **Figma MCP** (`get_metadata`, `get_design_context`, `get_screenshot`).
 
 **Use when:** user pastes a full-page Figma URL, asks to break down / decompose
 a design before implementing, or wants layout fidelity without pixel-perfect
-polish. Complements [measured-figma](../measured-figma) (measure gate after
-layout lands).
+polish. Complements a measured-figma / CDP `getComputedStyle` loop (measure
+gate after layout lands).
 
 ## What it does
 
