@@ -10,8 +10,8 @@ with **Figma MCP** (`get_metadata`, `get_design_context`, `get_screenshot`).
 
 **Use when:** user pastes a full-page Figma URL, asks to break down / decompose
 a design before implementing, or wants layout fidelity without pixel-perfect
-polish. Complements a measured-figma / CDP `getComputedStyle` loop (measure
-gate after layout lands).
+polish. Complements a browser CDP `getComputedStyle` measure loop (verify
+computed layout after it lands).
 
 ## What it does
 
@@ -24,7 +24,7 @@ gate after layout lands).
 3. **Phase C — Implement.** One approved section per turn. Layout pass only
    (structure / order / gap / padding / alignment / sizing). No absolute
    positioning unless the node has no Auto Layout.
-4. **Phase D — Optional measure.** Hand off to a measured-figma / CDP
+4. **Phase D — Optional measure.** Hand off to a browser CDP
    `getComputedStyle` loop if proof is wanted.
 
 Hard rules: never implement a whole page in one shot, no code before SPEC

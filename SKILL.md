@@ -5,8 +5,8 @@ description: >-
   ASCII wire guides), wait for approval, then implement one section at a time.
   Use when the user pastes a full-page Figma URL, asks to break down / decompose /
   สเปค before implement, wants markdown/ASCII layout guides, or wants layout
-  fidelity without pixel-perfect polish. Complements measured-figma (measure gate
-  after layout lands).
+  fidelity without pixel-perfect polish. Pair with a browser CDP measure gate
+  (getComputedStyle) after layout lands.
 ---
 
 # Figma Layout Spec
@@ -26,8 +26,8 @@ fidelity comes from Auto Layout facts, not from drawing prettier boxes.
 
 **Requires:** Working Figma MCP. No Figma tools → say so and stop.
 
-**Related:** After a section’s layout is accepted, use **measured-figma** (or
-equivalent CDP/`getComputedStyle` loop) if the user wants measured proof.
+**Related:** After a section’s layout is accepted, use a measured/CDP loop
+(`getComputedStyle`, `getBoundingClientRect`) if the user wants measured proof.
 
 ## Hard rules
 
@@ -120,8 +120,8 @@ For **one** approved section per turn:
 
 ### Phase D — Optional measure
 
-If user wants proof: hand off to **measured-figma** (or browser CDP
-`getBoundingClientRect` / `getComputedStyle` for gap/padding/size). Do not claim
+If user wants proof: use a browser CDP loop
+(`getBoundingClientRect` / `getComputedStyle` for gap/padding/size). Do not claim
 “measured” without real computed numbers.
 
 ## Anti-prompts (never invent these goals)
@@ -135,8 +135,8 @@ diff-scoped layout fix instead.
 
 ## When NOT to use this skill
 
-- Single small component/card → implement that node directly (measured-figma or
-  figma-design-to-code); skip full decompose.
+- Single small component/card → implement that node directly (design-to-code
+  flow); skip full decompose.
 - Design is mostly absolute / flattened images → say layout fidelity will stay
   weak; ask for Auto Layout or pick a smaller AL subtree.
 - User only wants a visual vibe from a screenshot → wrong tool.
