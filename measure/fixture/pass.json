@@ -1,0 +1,13 @@
+{
+  "url": "index.html",
+  "tolerance": 1,
+  "nodes": [
+    { "name": "header", "selector": "header.page-header",
+      "expect": { "display": "flex", "flexDirection": "row", "alignItems": "center", "justifyContent": "space-between",
+                  "gap": 16, "paddingLeft": 24, "paddingRight": 24, "height": 64, "width": 1392, "childCount": 2 } },
+    { "name": "header.title", "selector": "header.page-header h1",
+      "expect": { "fontSize": 20, "fontWeight": 600, "lineHeight": 28, "color": "#1F1F1F" } },
+    { "name": "filters", "selector": "[data-testid=filters]",
+      "expect": { "display": "flex", "gap": 12, "paddingTop": 16, "backgroundColor": "#FFFFFF", "borderRadius": 8 } }
+  ]
+}

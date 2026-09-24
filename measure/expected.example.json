@@ -1,0 +1,32 @@
+{
+  "url": "http://localhost:3000/orders",
+  "viewport": { "width": 1440, "height": 900 },
+  "tolerance": 1,
+  "storageState": null,
+  "waitFor": "[data-testid=orders-table]",
+  "nodes": [
+    {
+      "name": "header",
+      "figma": "232:1313",
+      "selector": "header.page-header",
+      "expect": {
+        "display": "flex", "flexDirection": "row", "alignItems": "center",
+        "justifyContent": "space-between", "gap": 16,
+        "paddingLeft": 24, "paddingRight": 24, "height": 64, "width": 1392,
+        "childCount": 2
+      }
+    },
+    {
+      "name": "header.title",
+      "figma": "232:1320",
+      "selector": "header.page-header h1",
+      "expect": { "fontSize": 20, "fontWeight": 600, "lineHeight": 28, "color": "#1F1F1F" }
+    },
+    {
+      "name": "filters",
+      "figma": "232:1401",
+      "selector": "[data-testid=filters]",
+      "expect": { "display": "flex", "gap": 12, "paddingTop": 16, "paddingBottom": 16, "backgroundColor": "#FFFFFF", "borderRadius": 8 }
+    }
+  ]
+}

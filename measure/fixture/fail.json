@@ -1,0 +1,7 @@
+{
+  "url": "index.html",
+  "nodes": [
+    { "name": "header", "selector": "header.page-header", "expect": { "gap": 24, "paddingLeft": 24, "color": "#000000" } },
+    { "name": "footer", "selector": "footer", "expect": { "height": 48 } }
+  ]
+}

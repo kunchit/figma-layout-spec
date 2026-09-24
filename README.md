@@ -9,9 +9,11 @@ Portable Agent Skill — works in Cursor, Claude Code, Codex, and any harness
 with **Figma MCP** (`get_metadata`, `get_design_context`, `get_screenshot`).
 
 **Use when:** user pastes a full-page Figma URL, asks to break down / decompose
-a design before implementing, or wants layout fidelity without pixel-perfect
-polish. Complements a browser CDP `getComputedStyle` measure loop (verify
-computed layout after it lands).
+a design before implementing, or wants layout + paint fidelity (structure,
+spacing, background, border, radius, shadow, text colour) without type-family
+or motion polish. Ships a Playwright measure gate so verification is a text
+diff of computed styles vs Figma numbers, closed by one element-by-element
+visual diff and a drift re-read of the Figma node (Done check).
 
 ## What it does
 
@@ -19,15 +21,19 @@ computed layout after it lands).
    implementable sections with nodeIds and risks. No code.
 2. **Phase B — SPEC.** Writes a SPEC file (`.cursor/plans/figma-{slug}.md` or
    `docs/figma/{slug}.md`) from `spec-template.md`: section table, ASCII wires,
-   Auto Layout → CSS map, reuse guesses, asset crop check. **Stops and waits
+   Auto Layout → CSS map, column-width table for Table/Grid (Figma child `w`
+   is not `column.width`), reuse guesses, asset crop check. **Stops and waits
    for approval.**
 3. **Phase C — Implement.** One approved section per turn. Layout pass only
    (structure / order / gap / padding / alignment / sizing). No absolute
    positioning unless the node has no Auto Layout. Honors the Figma hint
    priority ladder (Code Connect → docs → annotations → tokens → raw hex) and
    the asset rules (exported assets only, never hand-authored SVG).
-4. **Phase D — Optional measure.** Hand off to a browser CDP
-   `getComputedStyle` loop if proof is wanted.
+4. **Phase D — Measure gate.** Write `expected.json` from the Figma Auto
+   Layout facts, run `measure/measure.mjs` (Playwright, `getComputedStyle` /
+   `getBoundingClientRect`), loop on the text diff until `0 fail, 0 missing`.
+   One screenshot at the end. Seconds per run instead of an LLM round trip
+   per check.
 
 Hard rules: never implement a whole page in one shot, no code before SPEC
 approval, preserve Figma structure (no "improvements"), MCP React+Tailwind
@@ -71,11 +77,30 @@ implementing.
 - Working Figma MCP server (tools: `get_metadata`, `get_design_context`,
   `get_screenshot`; optional `get_variable_defs`, `get_code_connect_map`).
   No Figma tools → the skill says so and stops.
+- Node 18+ and `playwright` resolvable from the project root (`@playwright/test`
+  installed) or via `PW_ROOT`, for the Phase D measure gate.
 
 ## Files
 
 - `SKILL.md` — the skill (process control: decompose → spec → gated implement)
 - `spec-template.md` — SPEC file template used in Phase B
+- `table-notes.md` — Figma width → `column.width` arithmetic for table libraries
+  (loaded only when a section is a data table)
+- `measure/measure.mjs` — Phase D measure gate; `measure/expected.example.json`
+  is the input format; `measure/selfcheck.sh` runs it against `measure/fixture/`
+  (`PW_ROOT=/path/to/a/project/with/playwright sh measure/selfcheck.sh`)
+- `fieldmap/fieldmap.mjs` — **optional** Phase B assist: maps Figma sample
+  strings to project data fields with Jev (TypeSafe System One), picking only
+  from candidate fields you list and flagging the rest as `ASK BACKEND`.
+  Node 18+ and `OPENROUTER_API_KEY` (or `TYPESAFE_API_KEY`), no install — plain
+  fetch; without a key, write the map by hand. `fieldmap/example.json` is the
+  input format, `fieldmap/selfcheck.sh` proves the request builder with no API
+  key (`--dry`).
+- `component/component.mjs` — **optional** Phase B assist, same route and key:
+  picks one project component per Figma node (Table vs Descriptions, Modal vs
+  Drawer) from the components you list, with the runner-up, and flags `DECIDE`
+  rows. `component/example.json` is the input format, `component/selfcheck.sh`
+  runs `--dry` with no key.
 
 ## License
 

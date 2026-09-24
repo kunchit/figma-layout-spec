@@ -1,0 +1,22 @@
+{
+  "section": "Reservation detail — guest and contract panel",
+  "context": "Back-office page showing one reservation. The panel is read-only until the user clicks Edit, which swaps it for a form. Project is Next.js App Router with Ant Design 5.",
+  "candidates": {
+    "Table": "Many records of the same shape, one row each, with column headers, sorting or pagination.",
+    "Descriptions": "One record's fields as label/value pairs. No headers, no rows, no sorting.",
+    "Card": "A titled container that groups other content. Carries no data semantics of its own.",
+    "Tag": "A short status or category word rendered as a coloured chip.",
+    "Drawer": "A panel sliding in from an edge, over the page, dismissed without leaving it.",
+    "Modal": "A centred dialog that blocks the page until confirmed or cancelled.",
+    "Select": "Choose one of many options from a collapsed dropdown list.",
+    "Radio.Group": "Choose one of a few options, all visible at once."
+  },
+  "nodes": [
+    { "id": "panel", "node": "658:25712", "name": "Guest info card", "role": "top-left panel of the detail page", "layout": "vertical auto-layout, 24px padding, white fill, 8px radius, title row then content", "text": "ข้อมูลผู้เข้าพัก" },
+    { "id": "pairs", "node": "658:25718", "name": "Info rows", "role": "inside the guest info card", "layout": "6 rows, each a 120px label column and a value column, 12px gap", "text": "ชื่อ-นามสกุล / เบอร์โทร / อีเมล / เลขบัตรประชาชน" },
+    { "id": "status", "node": "658:25730", "name": "Status chip", "role": "right of the card title", "layout": "auto-layout hug, 4px 12px padding, 12px radius, green fill", "variants": "green / amber / grey", "text": "ยืนยันแล้ว" },
+    { "id": "history", "node": "658:25744", "name": "Payment history", "role": "lower half of the page", "layout": "header row plus 5 repeating rows, 4 columns, dividers between rows, pager at the bottom", "text": "วันที่ / รายการ / จำนวนเงิน / สถานะ" },
+    { "id": "edit", "node": "658:25760", "name": "Edit guest panel", "role": "opens when Edit is clicked", "layout": "480px wide, full page height, anchored to the right edge, page dimmed behind", "text": "แก้ไขข้อมูลผู้เข้าพัก" },
+    { "id": "title", "node": "658:25702", "name": "Page heading", "role": "top of the page above everything", "layout": "single text node, 24px semibold", "text": "รายละเอียดการจอง" }
+  ]
+}
