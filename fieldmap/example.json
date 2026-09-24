@@ -1,0 +1,19 @@
+{
+  "section": "Unit list table",
+  "context": "Back-office page listing rental units of one building. Each row is a Unit; the tenant shown is the unit's current active contract holder.",
+  "candidates": {
+    "Unit.unitNumber": "Room code printed on the door, e.g. A1201",
+    "Unit.floor": "Floor the unit sits on",
+    "Unit.sizeSqm": "Usable area in square metres",
+    "Contract.tenantName": "Full name of the tenant on the active contract",
+    "Contract.endDate": "Date the active contract ends",
+    "Unit.status": "Occupancy status of the unit"
+  },
+  "strings": [
+    { "id": "unit", "text": "A1201", "node": "232:1401", "role": "first column cell, under header \"ห้อง\"" },
+    { "id": "tenant", "text": "สมชาย ใจดี", "node": "232:1404", "role": "second column cell, under header \"ผู้เช่า\"" },
+    { "id": "end", "text": "31/12/2026", "node": "232:1407", "role": "fourth column cell, under header \"สิ้นสุดสัญญา\"" },
+    { "id": "chip", "text": "ว่าง", "node": "232:1410", "role": "status chip in the last column" },
+    { "id": "header", "text": "รายการห้อง", "node": "232:1390", "role": "section title above the table" }
+  ]
+}
